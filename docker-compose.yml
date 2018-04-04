@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  webapisample:
+    image: webapisample
+    build:
+      context: .
+      dockerfile: WebApiSample/Dockerfile
