@@ -2,6 +2,10 @@ version: '3'
 
 services:
   webapisample:
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
     image: webapisample
     build:
       context: .
