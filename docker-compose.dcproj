@@ -5,7 +5,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>0c67a0e6-8566-46aa-925a-bcc0deaf8129</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>http://localhost:{ServicePort}/api/values</DockerServiceUrl>
+    <DockerServiceUrl>http://localhost:{ServicePort}/</DockerServiceUrl>
     <DockerServiceName>webapisample</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>

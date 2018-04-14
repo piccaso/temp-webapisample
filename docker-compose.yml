@@ -3,6 +3,10 @@ version: '3'
 services:
   webapisample:
     image: webapisample
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
     build:
       context: .
       dockerfile: WebApiSample/Dockerfile
