@@ -30,8 +30,12 @@ namespace WebApiSample.Controllers
         /// <param name="guid"></param>
         /// <param name="by"></param>
         /// <returns></returns>
-        [HttpPost("{guid}/[action]/{by}")]
+        [HttpPatch("{guid}/[action]/{by}")]
         public long Increment(Guid guid, long by = 1) => _counterFactory.Create(guid).Increment(by);
+
+        // also support post (but hide it)
+        [HttpPost("{guid}/Increment/{by}"), ApiExplorerSettings(IgnoreApi = true)]
+        public long Inc(Guid guid, long by = 1) => _counterFactory.Create(guid).Increment(by);
 
         /// <summary>
         /// set a counter value
