@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using AwaitAndGetResult;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using ApiClient = Client.Client;
 using NUnit.Framework;
-using WebApiClient;
 using WebApiSample.Infrastructure;
 
 namespace IntegrationTests
@@ -17,7 +17,7 @@ namespace IntegrationTests
     public class WebApiTests
     {
         private HttpClient _client;
-        private Client _api;
+        private ApiClient _api;
 
         [SetUp]
         public void SetUp()
@@ -26,7 +26,7 @@ namespace IntegrationTests
             var host = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(host);
             _client = server.CreateClient();
-            _api = new Client(server.BaseAddress.ToString(), _client);
+            _api = new ApiClient(server.BaseAddress.ToString(), _client);
             sw.Stop();
             TestContext.WriteLine($"SetUp Time: {sw.Elapsed}");
         }
@@ -38,6 +38,7 @@ namespace IntegrationTests
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
+            
             await File.WriteAllTextAsync("swagger.json", json, Encoding.UTF8);
             TestContext.AddTestAttachment("swagger.json", "Swagger Spec");
         }
@@ -50,9 +51,9 @@ namespace IntegrationTests
             var sw = new Stopwatch();
 
             sw.Start();
-            var setResp = await _api.ApiCounterSetPostAsync(id, val);
-            var incResp = await _api.ApiCounterIncrementPostAsync(id, 15);
-            var getResp = await _api.ApiCounterGetGetAsync(id);
+            var setResp = await _api.ApiCounterByGuidSetByValuePostAsync(id, val);
+            var incResp = await _api.ApiCounterByGuidIncrementByByPostAsync(id, 15);
+            var getResp = await _api.ApiCounterByGuidGetGetAsync(id);
             sw.Stop();
 
             Assert.AreEqual(val, setResp);
@@ -65,7 +66,7 @@ namespace IntegrationTests
         public void Threads()
         {
             var sync = new object();
-            Parallel.For(0, 100, new ParallelOptions(){MaxDegreeOfParallelism = Environment.ProcessorCount}, (i, state) => 
+            Parallel.For(0, 100, new ParallelOptions {MaxDegreeOfParallelism = Environment.ProcessorCount}, (i, state) => 
             {
                 // Arrange
                 var uuid = Guid.NewGuid();
@@ -74,9 +75,9 @@ namespace IntegrationTests
 
                 // Act
                 sw.Start();
-                var setResult = _api.ApiCounterSetPostAsync(uuid, value).AwaitAndGetResult();
-                var addResult = _api.ApiCounterIncrementPostAsync(uuid, 500).AwaitAndGetResult();
-                var getResult = _api.ApiCounterGetGetAsync(uuid).AwaitAndGetResult();
+                var setResult = _api.ApiCounterByGuidSetByValuePostAsync(uuid, value).AwaitAndGetResult();
+                var addResult = _api.ApiCounterByGuidIncrementByByPostAsync(uuid, 500).AwaitAndGetResult();
+                var getResult = _api.ApiCounterByGuidGetGetAsync(uuid).AwaitAndGetResult();
                 sw.Stop();
 
 

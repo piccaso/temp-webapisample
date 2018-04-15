@@ -6,22 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiSample.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     public class CounterController : Controller
     {
-        private readonly ICounter _counter;
+        private readonly ICounterFactory _counterFactory;
 
-        public CounterController(ICounter counter)
+        public CounterController(ICounterFactory counterFactory)
         {
-            _counter = counter;
+            _counterFactory = counterFactory;
         }
+
         /// <summary>
         /// get counter value
         /// </summary>
         /// <param name="guid"></param>
         /// <returns>a value</returns>
-        [HttpGet]
-        public long Get(Guid guid) => _counter.Get(guid);
+        [HttpGet("{guid}/[action]")]
+        public long Get(Guid guid) => _counterFactory.Create(guid).Get();
 
         /// <summary>
         /// increment a counter
@@ -29,8 +30,8 @@ namespace WebApiSample.Controllers
         /// <param name="guid"></param>
         /// <param name="by"></param>
         /// <returns></returns>
-        [HttpPost]
-        public long Increment(Guid guid, long by) => _counter.Increment(guid, by);
+        [HttpPost("{guid}/[action]/{by}")]
+        public long Increment(Guid guid, long by = 1) => _counterFactory.Create(guid).Increment(by);
 
         /// <summary>
         /// set a counter value
@@ -38,7 +39,11 @@ namespace WebApiSample.Controllers
         /// <param name="guid"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        [HttpPost]
-        public long Set(Guid guid, long value) => _counter.Set(guid, value);
+        [HttpPost("{guid}/[action]/{value}")]
+        public long Set(Guid guid, long value)
+        {
+            _counterFactory.Create(guid).Set(value);
+            return value;
+        }
     }
 }

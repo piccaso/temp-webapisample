@@ -4,28 +4,24 @@ namespace Library
 {
     public interface ICounter
     {
-        long Get(Guid guid);
-        long Increment(Guid guid, long by);
-        long Set(Guid guid, long value);
+        long Get();
+        long Increment(long by);
+        void Set(long value);
     }
 
     public class Counter : ICounter
     {
-        private readonly IValueRepository _valueRepository;
+        private readonly Guid _id;
+        private readonly IValueRepository _repository;
 
-        public Counter(IValueRepository valueRepository)
+        internal Counter(Guid id, IValueRepository repository)
         {
-            _valueRepository = valueRepository;
-        }
-        
-        public long Set(Guid guid, long value)
-        {
-            _valueRepository.Set(guid, value);
-
-            return value;
+            _id = id;
+            _repository = repository;
         }
 
-        public long Increment(Guid guid, long by) => _valueRepository.Add(guid, by);
-        public long Get(Guid guid) => _valueRepository.Get(guid);
+        public long Get() => _repository.Get(_id);
+        public long Increment(long by) => _repository.Add(_id, by);
+        public void Set(long value) => _repository.Set(_id, value);
     }
 }

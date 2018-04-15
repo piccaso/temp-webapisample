@@ -4,7 +4,7 @@
 // </auto-generated>
 //----------------------
 
-namespace WebApiClient
+namespace Client
 {
 #pragma warning disable // Disable all warnings
 
@@ -38,24 +38,26 @@ namespace WebApiClient
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
-        /// <summary>get counter value</summary>
+        /// <summary>get counterFactory value</summary>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<long> ApiCounterGetGetAsync(System.Guid? guid)
+        public System.Threading.Tasks.Task<long> ApiCounterByGuidGetGetAsync(System.Guid guid)
         {
-            return ApiCounterGetGetAsync(guid, System.Threading.CancellationToken.None);
+            return ApiCounterByGuidGetGetAsync(guid, System.Threading.CancellationToken.None);
         }
 
-        /// <summary>get counter value</summary>
+        /// <summary>get counterFactory value</summary>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<long> ApiCounterGetGetAsync(System.Guid? guid, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<long> ApiCounterByGuidGetGetAsync(System.Guid guid, System.Threading.CancellationToken cancellationToken)
         {
+            if (guid == null)
+                throw new System.ArgumentNullException("guid");
+
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Counter/Get?");
-            if (guid != null) urlBuilder_.Append("guid=").Append(System.Uri.EscapeDataString(ConvertToString(guid, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            urlBuilder_.Length--;
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Counter/{guid}/Get");
+            urlBuilder_.Replace("{guid}", System.Uri.EscapeDataString(ConvertToString(guid, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             try
@@ -115,25 +117,30 @@ namespace WebApiClient
             }
         }
 
-        /// <summary>increment a counter</summary>
+        /// <summary>increment a counterFactory</summary>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<long> ApiCounterIncrementPostAsync(System.Guid? guid, long? by)
+        public System.Threading.Tasks.Task<long> ApiCounterByGuidIncrementByByPostAsync(System.Guid guid, long by)
         {
-            return ApiCounterIncrementPostAsync(guid, by, System.Threading.CancellationToken.None);
+            return ApiCounterByGuidIncrementByByPostAsync(guid, by, System.Threading.CancellationToken.None);
         }
 
-        /// <summary>increment a counter</summary>
+        /// <summary>increment a counterFactory</summary>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<long> ApiCounterIncrementPostAsync(System.Guid? guid, long? by, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<long> ApiCounterByGuidIncrementByByPostAsync(System.Guid guid, long by, System.Threading.CancellationToken cancellationToken)
         {
+            if (guid == null)
+                throw new System.ArgumentNullException("guid");
+
+            if (by == null)
+                throw new System.ArgumentNullException("by");
+
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Counter/Increment?");
-            if (guid != null) urlBuilder_.Append("guid=").Append(System.Uri.EscapeDataString(ConvertToString(guid, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            if (by != null) urlBuilder_.Append("by=").Append(System.Uri.EscapeDataString(ConvertToString(by, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            urlBuilder_.Length--;
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Counter/{guid}/Increment/{by}");
+            urlBuilder_.Replace("{guid}", System.Uri.EscapeDataString(ConvertToString(guid, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Replace("{by}", System.Uri.EscapeDataString(ConvertToString(by, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             try
@@ -194,25 +201,30 @@ namespace WebApiClient
             }
         }
 
-        /// <summary>set a counter value</summary>
+        /// <summary>set a counterFactory value</summary>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<long> ApiCounterSetPostAsync(System.Guid? guid, long? value)
+        public System.Threading.Tasks.Task<long> ApiCounterByGuidSetByValuePostAsync(System.Guid guid, long value)
         {
-            return ApiCounterSetPostAsync(guid, value, System.Threading.CancellationToken.None);
+            return ApiCounterByGuidSetByValuePostAsync(guid, value, System.Threading.CancellationToken.None);
         }
 
-        /// <summary>set a counter value</summary>
+        /// <summary>set a counterFactory value</summary>
         /// <returns>Success</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<long> ApiCounterSetPostAsync(System.Guid? guid, long? value, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<long> ApiCounterByGuidSetByValuePostAsync(System.Guid guid, long value, System.Threading.CancellationToken cancellationToken)
         {
+            if (guid == null)
+                throw new System.ArgumentNullException("guid");
+
+            if (value == null)
+                throw new System.ArgumentNullException("value");
+
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Counter/Set?");
-            if (guid != null) urlBuilder_.Append("guid=").Append(System.Uri.EscapeDataString(ConvertToString(guid, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            if (value != null) urlBuilder_.Append("value=").Append(System.Uri.EscapeDataString(ConvertToString(value, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            urlBuilder_.Length--;
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Counter/{guid}/Set/{value}");
+            urlBuilder_.Replace("{guid}", System.Uri.EscapeDataString(ConvertToString(guid, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Replace("{value}", System.Uri.EscapeDataString(ConvertToString(value, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             try

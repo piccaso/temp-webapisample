@@ -7,7 +7,7 @@ namespace WebApiSample.Infrastructure
     {
         public static void AddCounter(this IServiceCollection sc)
         {
-            sc.AddSingleton<ICounter, Counter>();
+            sc.AddSingleton<ICounterFactory, CounterFactory>();
             sc.AddSingleton<IValueRepository, ValueRepository>();
         }
     }
