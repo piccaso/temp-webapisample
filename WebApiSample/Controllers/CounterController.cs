@@ -17,6 +17,13 @@ namespace WebApiSample.Controllers
         }
 
         /// <summary>
+        /// Create a new Counter
+        /// </summary>
+        /// <returns>a counter uuid</returns>
+        [HttpGet("new")]
+        public Guid New() => Guid.NewGuid();
+
+        /// <summary>
         /// get counter value
         /// </summary>
         /// <param name="guid"></param>
