@@ -1,12 +1,18 @@
 ﻿using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using AwaitAndGetResult;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.CSharp;
+using NSwag;
+using NSwag.CodeGeneration.CSharp;
 using ApiClient = Client.Client;
 using NUnit.Framework;
 using WebApiSample.Infrastructure;
@@ -41,6 +47,34 @@ namespace IntegrationTests
             
             await File.WriteAllTextAsync("swagger.json", json, Encoding.UTF8);
             TestContext.AddTestAttachment("swagger.json", "Swagger Spec");
+        }
+
+        [Test]
+        public async Task CanBuildClient() {
+            var response = await _client.GetAsync("/swagger/v1/swagger.json");
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+
+            var document = await SwaggerDocument.FromJsonAsync(json);
+            var settings = new SwaggerToCSharpClientGeneratorSettings {
+                InjectHttpClient = true,
+                GenerateSyncMethods = true,
+                CSharpGeneratorSettings = {
+                    Namespace = "Client",
+                }
+            };
+            var generator = new SwaggerToCSharpClientGenerator(document, settings);
+            var code = generator.GenerateFile();
+
+            Directory.CreateDirectory("cbc");
+
+            File.WriteAllText("cbc/Client.cs", code);
+            TestContext.WriteLine(code);
+            TestContext.AddTestAttachment("cbc/Client.cs","generated rest api client");
+
+            // TODO: maybe compile? 
+            // https://msdn.microsoft.com/en-us/magazine/mt808499.aspx
+            // https://github.com/RSuter/NSwag/wiki/SwaggerToCSharpClientGenerator
         }
 
         [Test]
