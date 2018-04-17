@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiSample", "WebApiSampl
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{0C67A0E6-8566-46AA-925A-BCC0DEAF8129}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "..\Tests\Tests.csproj", "{A8C9C5F2-1E46-4B3C-8A79-1AB1880DFC2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{A8C9C5F2-1E46-4B3C-8A79-1AB1880DFC2F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library", "Library\Library.csproj", "{35E70A03-0C5D-461D-B474-A53E10A85166}"
 EndProject

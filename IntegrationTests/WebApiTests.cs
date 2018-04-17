@@ -1,16 +1,11 @@
 ﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using AwaitAndGetResult;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.CSharp;
 using NSwag;
 using NSwag.CodeGeneration.CSharp;
 using ApiClient = Client.Client;
@@ -24,17 +19,25 @@ namespace IntegrationTests
     {
         private HttpClient _client;
         private ApiClient _api;
+        private TestServer _server;
 
         [SetUp]
         public void SetUp()
         {
             var sw = Stopwatch.StartNew();
             var host = new WebHostBuilder().UseStartup<Startup>();
-            var server = new TestServer(host);
-            _client = server.CreateClient();
-            _api = new ApiClient(server.BaseAddress.ToString(), _client);
+            _server = new TestServer(host);
+            _client = _server.CreateClient();
+            _api = new ApiClient(_server.BaseAddress.ToString(), _client);
             sw.Stop();
             TestContext.WriteLine($"SetUp Time: {sw.Elapsed}");
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _client.Dispose();
+            _server.Dispose();
         }
 
         [Test]
@@ -65,20 +68,11 @@ namespace IntegrationTests
             };
             var generator = new SwaggerToCSharpClientGenerator(document, settings);
             var code = generator.GenerateFile();
-
-            Directory.CreateDirectory("cbc");
-
-            File.WriteAllText("cbc/Client.cs", code);
             TestContext.WriteLine(code);
-            TestContext.AddTestAttachment("cbc/Client.cs","generated rest api client");
-
-            // TODO: maybe compile? 
-            // https://msdn.microsoft.com/en-us/magazine/mt808499.aspx
-            // https://github.com/RSuter/NSwag/wiki/SwaggerToCSharpClientGenerator
         }
 
         [Test]
-        public async Task Increment()
+        public async Task CanIncrement()
         {
             var id = Guid.NewGuid();
             const long val = 222;
@@ -86,7 +80,7 @@ namespace IntegrationTests
 
             sw.Start();
             var setResp = await _api.ApiCounterByGuidSetByValuePostAsync(id, val);
-            var incResp = await _api.ApiCounterByGuidIncrementByByPostAsync(id, 15);
+            var incResp = await _api.ApiCounterByGuidIncrementByByPatchAsync(id, 15);
             var getResp = await _api.ApiCounterByGuidGetGetAsync(id);
             sw.Stop();
 
@@ -97,7 +91,7 @@ namespace IntegrationTests
         }
 
         [Test]
-        public void Threads()
+        public void CanHandleConcurrency()
         {
             var sync = new object();
             Parallel.For(0, 100, new ParallelOptions {MaxDegreeOfParallelism = Environment.ProcessorCount}, (i, state) => 
@@ -109,9 +103,9 @@ namespace IntegrationTests
 
                 // Act
                 sw.Start();
-                var setResult = _api.ApiCounterByGuidSetByValuePostAsync(uuid, value).AwaitAndGetResult();
-                var addResult = _api.ApiCounterByGuidIncrementByByPostAsync(uuid, 500).AwaitAndGetResult();
-                var getResult = _api.ApiCounterByGuidGetGetAsync(uuid).AwaitAndGetResult();
+                var setResult = _api.ApiCounterByGuidSetByValuePost(uuid, value);
+                var addResult = _api.ApiCounterByGuidIncrementByByPatch(uuid, 500);
+                var getResult = _api.ApiCounterByGuidGetGet(uuid);
                 sw.Stop();
 
 
