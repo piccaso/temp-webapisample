@@ -4,6 +4,8 @@ services:
   webapisample:
     image: webapisample
     read_only: true
+    cap_drop:
+      - ALL
     tmpfs:
       - /tmp
       - /var/run
